@@ -1,4 +1,5 @@
-from dashboards import sleep_time, routine, mess, major_events, sleep_pattern
+from dashboards import sleep_time, routine, mess, major_events, sleep_pattern, workout_events
+from dashboards.workout_events import WorkoutGraphs
 from layout import get_layout
 import dash
 import dash_html_components as html
@@ -37,6 +38,7 @@ server = app.server
 
 app.layout = get_layout()
 
+workout_graphs = WorkoutGraphs()
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname'), Input('session_id', 'children')])
@@ -53,11 +55,12 @@ def display_dashboard(pathname, session_id):
         return major_events.content
     elif pathname == '/sleep_pattern':
         return sleep_pattern.content
+    elif pathname == '/workout_events':
+        return workout_graphs.CONTENT
     else:
         return html.Div([
             html.Div('You are on page {}'.format(pathname))
         ])
-
 
 
 @app.callback(
@@ -69,6 +72,14 @@ def display_dashboard(pathname, session_id):
 def update_sleep_pattern_graph(start_date, end_date):
     return sleep_pattern.get_sleep_time_graph(start_date, end_date), sleep_pattern.get_sleep_duration_graph(start_date,end_date)
 
+
+@app.callback(
+    [Output("workout_events_graph", 'figure')],
+    [Input(component_id='date-picker', component_property='start_date'),
+        Input(component_id='date-picker', component_property='end_date'),]
+)
+def update_workout_events_graph(start_date, end_date):
+    return workout_graphs.get_workout_events_graph(start_date, end_date)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
