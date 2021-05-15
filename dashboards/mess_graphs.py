@@ -5,6 +5,7 @@ from commons.calendar_service import calendar_service
 from models.graph import Graph
 from models.calendar_event import CalendarEvent
 from datetime import datetime, date, timedelta
+from utils.graph_utils import get_events_by_month, get_events_by_week
 
 
 class MessGraphs:
@@ -75,7 +76,7 @@ class MessGraphs:
             graph.y.append(len(events))
 
         fig = go.Figure([go.Bar(x=graph.x, y=graph.y, name=graph.title)])
-        fig = graph.update_fig_layout(fig)
+        # fig = graph.update_fig_layout(fig)
         return fig
 
     def get_monthly_mess_graph(self):
@@ -89,6 +90,6 @@ class MessGraphs:
             graph.y.append(len(events))
 
         fig = go.Figure([go.Bar(x=graph.x, y=graph.y, name=graph.title)])
-        fig = graph.update_fig_layout(fig)
+        # fig = graph.update_fig_layout(fig)
         return fig
 

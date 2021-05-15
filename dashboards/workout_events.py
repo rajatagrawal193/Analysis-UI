@@ -5,36 +5,39 @@ import plotly.graph_objects as go
 from datetime import timedelta, date
 from models.graph import Graph
 from commons.calendar_service import calendar_service
+from utils.graph_utils import generate_monthly_frequency_graph, generate_weekly_frequency_graph
 
 
 class WorkoutGraphs:
 
-    @staticmethod
-    def get_workout_events_graph(start_date, end_date):
-        print(start_date, end_date)
-        workout_calendar_id = "kfb7kr4iegnkieils995vrbeck@group.calendar.google.com"
-        workout_events = calendar_service.get_events(workout_calendar_id, start_date, end_date)
+    WORKOUT_CALENDAR_ID = "kfb7kr4iegnkieils995vrbeck@group.calendar.google.com"
+    WORKOUT_GRAPHS_CONTENT_ID = "workout_graphs_content"
+    WORKOUT_EVENTS_GRAPH_ID = "workout_events_graph"
+    WEEKLY_WORKOUT_EVENTS_GRAPH_ID = "weekly_workout_events_graph"
+    MONTHLY_WORKOUT_EVENTS_GRAPH_ID = "monthly_workout_events_graph"
+
+    def __init__(self, start_date, end_date):
+        self.start_date = date.fromisoformat(start_date)
+        self.end_date = date.fromisoformat(end_date)
+        self.workout_events = calendar_service.get_events(self.WORKOUT_CALENDAR_ID, start_date, end_date)
+        self.content = html.Div(id=self.WORKOUT_GRAPHS_CONTENT_ID, children=[
+            dcc.Graph(id=self.WORKOUT_EVENTS_GRAPH_ID,figure=self.get_workout_events_graph()),
+            dcc.Graph(id=self.WEEKLY_WORKOUT_EVENTS_GRAPH_ID, figure=self.get_weekly_workout_graph()),
+            dcc.Graph(id=self.MONTHLY_WORKOUT_EVENTS_GRAPH_ID, figure=self.get_monthly_workout_graph()),
+        ], className="panel panel-default")
+
+    def get_workout_events_graph(self):
         graph = Graph("Workout Events", "Date", "Time")
-        for event in workout_events:
+        for event in self.workout_events:
             graph.x.append(event.start.date())
             start_value = event.start.hour + event.start.minute / 60.0
-            end_value = event.end.hour + event.end.minute / 60.0
             graph.y.append(start_value)
-            time_in_am_pm = event.start.strftime("%I:%M")
             graph.text.append(event.summary)
             graph.marker_size.append(event.duration_in_minutes/2.5)
 
-
         fig = go.Figure()
+        # fig = graph.update_fig_layout(fig)
 
-        fig.update_layout(legend_title_text=graph.title,
-                          yaxis_title=graph.y_axis, xaxis_title=graph.x_axis,
-                          title=utils.set_title(graph.title))
-        # fig.update_yaxes(rangemode="tozero")
-        # fig.update_yaxes(
-        #     ticktext=["10 PM", "12 AM", "2AM", "5AM", "9AM"],
-        #     tickvals=[22, 24, 26, 29, 33],
-        # )
         fig.add_trace(go.Scatter(
             x=graph.x,
             y=graph.y,
@@ -46,10 +49,13 @@ class WorkoutGraphs:
 
         return fig
 
-    def __init__(self):
-        self.CONTENT = html.Div([
-            dcc.Graph(id="workouts_graph", figure=self.get_workout_events_graph((date.today()-timedelta(days=31)).isoformat(),
-                                                                           date.today().isoformat())),
-        ], className="panel panel-default")
+    def get_weekly_workout_graph(self):
+        # return go.Figure()
+        return generate_weekly_frequency_graph("Workout", self.workout_events, self.start_date, self.end_date)
+
+    def get_monthly_workout_graph(self):
+        # return go.Figure()
+        return generate_monthly_frequency_graph("Workout", self.workout_events, self.start_date, self.end_date)
+
 
 

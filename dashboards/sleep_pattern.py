@@ -60,9 +60,9 @@ class SleepPattern:
 
         fig = go.Figure()
 
-        fig.update_layout(legend_title_text='Sleep Pattern',
-                          yaxis_title='Time', xaxis_title='Date',
-                          title=utils.set_title("Sleep Pattern"))
+        # fig.update_layout(legend_title_text='Sleep Pattern',
+        #                   yaxis_title='Time', xaxis_title='Date',
+        #                   title=utils.set_title("Sleep Pattern"))
         # fig.update_yaxes(rangemode="tozero")
         fig.update_yaxes(
             ticktext=["10 PM", "12 AM", "2AM", "5AM", "9AM"],

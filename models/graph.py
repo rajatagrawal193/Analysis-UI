@@ -4,17 +4,16 @@ from utils.utils import set_title
 
 class Graph:
     def get_figure(self):
-        fig = go.Figure()
-        fig.update_layout(legend_title_text=self.title,
-                          yaxis_title=self.y_axis, xaxis_title=self.x_axis,
-                          title=set_title(self.title))
+        fig = go.Figure(layout=dict(height=500, title=dict(text=self.title)))
+        # fig.update_layout(dict(title=set_title(self.title)))
         return fig
 
     def update_fig_layout(self, fig):
-        fig.update_layout(legend_title_text=self.title,
-                          yaxis_title=self.y_axis, xaxis_title=self.x_axis,
-                          title=set_title(self.title))
+        # fig.update_layout(legend_title_text=self.title,
+        #                   yaxis_title=self.y_axis, xaxis_title=self.x_axis,
+        #                   title=set_title(self.title))
         return fig
+
 
     def __init__(self, title, x_axis, y_axis):
         self.title = title

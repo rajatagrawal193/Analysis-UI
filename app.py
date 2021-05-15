@@ -33,9 +33,10 @@ app.layout = get_layout()
 
 default_start_date = (date.today() - timedelta(days=31)).isoformat()
 default_end_date = (date.today() + timedelta(days=1)).isoformat()
-workout_graphs = WorkoutGraphs()
+workout_graphs = WorkoutGraphs(default_start_date, default_end_date)
 sleep_pattern = SleepPattern(default_start_date, default_end_date )
 mess_graphs = MessGraphs(default_start_date, default_end_date)
+
 
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname'), Input('session_id', 'children')])
@@ -53,7 +54,7 @@ def display_dashboard(pathname, session_id):
     elif pathname == '/sleep_pattern':
         return sleep_pattern.content
     elif pathname == '/workout_events':
-        return workout_graphs.CONTENT
+        return workout_graphs.content
     else:
         return html.Div([
             html.Div('You are on page {}'.format(pathname))
@@ -72,12 +73,16 @@ def update_sleep_pattern_graph(start_date, end_date):
 
 
 @app.callback(
-    Output("workouts_graph", 'figure'),
+    [Output(WorkoutGraphs.WORKOUT_EVENTS_GRAPH_ID, 'figure'),
+     Output(WorkoutGraphs.WEEKLY_WORKOUT_EVENTS_GRAPH_ID, 'figure'),
+     Output(WorkoutGraphs.MONTHLY_WORKOUT_EVENTS_GRAPH_ID, 'figure'),],
     [Input(component_id='date-picker', component_property='start_date'),
         Input(component_id='date-picker', component_property='end_date'),]
 )
-def update_workout_events_graph(start_date, end_date):
-    return workout_graphs.get_workout_events_graph(start_date, end_date)
+def update_workout_events_graphs(start_date, end_date):
+    wg = WorkoutGraphs(start_date, end_date)
+
+    return wg.get_workout_events_graph(), wg.get_weekly_workout_graph(), wg.get_monthly_workout_graph()
 
 
 @app.callback(
@@ -87,7 +92,7 @@ def update_workout_events_graph(start_date, end_date):
     [Input(component_id='date-picker', component_property='start_date'),
      Input(component_id='date-picker', component_property='end_date'),]
 )
-def update_workout_events_graph(start_date, end_date):
+def update_mess_events_graphs(start_date, end_date):
     mg = MessGraphs(start_date, end_date)
     return mg.get_mess_graph(), mg.get_weekly_mess_graph(), mg.get_monthly_mess_graph()
 
