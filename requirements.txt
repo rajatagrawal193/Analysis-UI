@@ -2,7 +2,6 @@ mysqlclient
 flask-caching
 SQLAlchemy==1.3.10
 dash==1.13.4
-numpy==1.16.6
 uwsgi
 dash-bootstrap-components==0.10.3
 sentry-sdk[flask]==0.16.1
