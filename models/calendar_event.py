@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class CalendarEvent:
 
     @staticmethod
@@ -5,7 +7,7 @@ class CalendarEvent:
         difference = end - start
         return difference.total_seconds()
 
-    def __init__(self, start, end, summary, description, raw_event=None):
+    def __init__(self, start: datetime, end: datetime, summary: str, description: str, raw_event=None):
         self.start = start
         self.end = end
         self.summary = summary
