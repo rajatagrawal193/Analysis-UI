@@ -3,8 +3,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 from datetime import datetime, timedelta, date
-from GoogleAPI.google_calendar import CalendarService
 from dashboards.graph import Graph
+from commons.calendar_service import calendar_service
 
 
 class WorkoutGraphs:
@@ -12,7 +12,6 @@ class WorkoutGraphs:
     @staticmethod
     def get_workout_events_graph(start_date, end_date):
         print(start_date, end_date)
-        calendar_service = CalendarService()
         workout_calendar_id = "kfb7kr4iegnkieils995vrbeck@group.calendar.google.com"
         workout_events = calendar_service.get_events(workout_calendar_id, start_date, end_date)
         graph = Graph("Workout Events", "Date", "Time")

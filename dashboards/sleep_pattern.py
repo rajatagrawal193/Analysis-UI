@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 from datetime import datetime, timedelta, date
-from GoogleAPI.google_calendar import CalendarService
+from commons.calendar_service import calendar_service
 
 
 class SleepPattern:
@@ -13,7 +13,6 @@ class SleepPattern:
     DURATION_GRAPH_ID = "sleep_duration_graph"
 
     def __init__(self, start_date, end_date):
-        calendar_service = CalendarService()
         self.sleep_events = calendar_service.get_events(self.SLEEP_CALENDAR_ID, start_date, end_date)
         self.content = self.get_content()
 
