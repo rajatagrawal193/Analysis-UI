@@ -83,6 +83,8 @@ def get_sidebar():
                         "Major Events", href="/major_events", id="major_events")),
                     dbc.NavItem(dbc.NavLink(
                         "Sleep Pattern", href="/sleep_pattern", id="sleep_pattern")),
+                    dbc.NavItem(dbc.NavLink(
+                        "Workout", href="/workout_events", id="workout_events")),
                 ],
                 vertical=True,
                 pills=True,
