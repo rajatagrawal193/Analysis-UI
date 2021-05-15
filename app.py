@@ -1,4 +1,4 @@
-from dashboards import sleep_time, routine, mess, major_events, workout_events
+# from dashboards import sleep_time, routine, mess, major_events, workout_events
 from dashboards.sleep_pattern import SleepPattern
 from dashboards.workout_events import WorkoutGraphs
 from layout import get_layout
@@ -37,15 +37,15 @@ sleep_pattern = SleepPattern((date.today() - timedelta(days=31)).isoformat(), da
               [dash.dependencies.Input('url', 'pathname'), Input('session_id', 'children')])
 def display_dashboard(pathname, session_id):
     if pathname == '/':
-        return sleep_time.content
-    elif pathname == '/sleep-time':
-        return sleep_time.content
-    elif pathname == '/routine':
-        return routine.content
-    elif pathname == '/mess':
-        return mess.content
-    elif pathname == '/major_events':
-        return major_events.content
+        return sleep_pattern.content
+    # elif pathname == '/sleep-time':
+    #     return sleep_time.content
+    # elif pathname == '/routine':
+    #     return routine.content
+    # elif pathname == '/mess':
+    #     return mess.content
+    # elif pathname == '/major_events':
+    #     return major_events.content
     elif pathname == '/sleep_pattern':
         return sleep_pattern.content
     elif pathname == '/workout_events':
