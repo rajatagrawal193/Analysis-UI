@@ -1,10 +1,10 @@
-from dashboards.graph import Graph
+from models.graph import Graph
 from utils import utils
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
-from datetime import datetime, timedelta, date
-from GoogleAPI.google_calendar import CalendarService
+from datetime import timedelta
+from commons.calendar_service import calendar_service
 
 
 class SleepPattern:
@@ -13,7 +13,6 @@ class SleepPattern:
     DURATION_GRAPH_ID = "sleep_duration_graph"
 
     def __init__(self, start_date, end_date):
-        calendar_service = CalendarService()
         self.sleep_events = calendar_service.get_events(self.SLEEP_CALENDAR_ID, start_date, end_date)
         self.content = self.get_content()
 
@@ -61,9 +60,9 @@ class SleepPattern:
 
         fig = go.Figure()
 
-        fig.update_layout(legend_title_text='Sleep Pattern',
-                          yaxis_title='Time', xaxis_title='Date',
-                          title=utils.set_title("Sleep Pattern"))
+        # fig.update_layout(legend_title_text='Sleep Pattern',
+        #                   yaxis_title='Time', xaxis_title='Date',
+        #                   title=utils.set_title("Sleep Pattern"))
         # fig.update_yaxes(rangemode="tozero")
         fig.update_yaxes(
             ticktext=["10 PM", "12 AM", "2AM", "5AM", "9AM"],
