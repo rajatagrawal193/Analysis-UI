@@ -10,6 +10,7 @@ class CalendarEvent:
     def __init__(self, start: datetime, end: datetime, summary: str, description: str, raw_event=None):
         self.start = start
         self.end = end
+        self.date = start.date()
         self.summary = summary
         self.description = description
         self.raw_event = raw_event

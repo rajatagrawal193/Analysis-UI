@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from datetime import timedelta, date
 from models.graph import Graph
 from commons.calendar_service import calendar_service
-from utils.graph_utils import generate_monthly_frequency_graph, generate_weekly_frequency_graph
+from utils.graph_utils import generate_monthly_frequency_graph, generate_weekly_monthly_trends
 
 
 class WorkoutGraphs:
@@ -21,7 +21,7 @@ class WorkoutGraphs:
         self.end_date = date.fromisoformat(end_date)
         self.workout_events = calendar_service.get_events(self.WORKOUT_CALENDAR_ID, start_date, end_date)
         self.content = html.Div(id=self.WORKOUT_GRAPHS_CONTENT_ID, children=[
-            dcc.Graph(id=self.WORKOUT_EVENTS_GRAPH_ID,figure=self.get_workout_events_graph()),
+            dcc.Graph(id=self.WORKOUT_EVENTS_GRAPH_ID, figure=self.get_workout_events_graph()),
             dcc.Graph(id=self.WEEKLY_WORKOUT_EVENTS_GRAPH_ID, figure=self.get_weekly_workout_graph()),
             dcc.Graph(id=self.MONTHLY_WORKOUT_EVENTS_GRAPH_ID, figure=self.get_monthly_workout_graph()),
         ], className="panel panel-default")
@@ -33,7 +33,7 @@ class WorkoutGraphs:
             start_value = event.start.hour + event.start.minute / 60.0
             graph.y.append(start_value)
             graph.text.append(event.summary)
-            graph.marker_size.append(event.duration_in_minutes/2.5)
+            graph.marker_size.append(event.duration_in_minutes / 2.5)
 
         fig = go.Figure()
         # fig = graph.update_fig_layout(fig)
@@ -51,11 +51,8 @@ class WorkoutGraphs:
 
     def get_weekly_workout_graph(self):
         # return go.Figure()
-        return generate_weekly_frequency_graph("Workout", self.workout_events, self.start_date, self.end_date)
+        return generate_weekly_monthly_trends("Workout", self.workout_events, self.start_date, self.end_date, "Weekly", duration=False)
 
     def get_monthly_workout_graph(self):
         # return go.Figure()
-        return generate_monthly_frequency_graph("Workout", self.workout_events, self.start_date, self.end_date)
-
-
-
+        return generate_weekly_monthly_trends("Workout", self.workout_events, self.start_date, self.end_date, "Monthly", duration=False)

@@ -73,10 +73,12 @@ def get_sidebar():
                     html.Br(),
                     dbc.NavItem(dbc.NavLink(
                         "Dashboard", disabled=True, href="#")),
-                    dbc.NavItem(dbc.NavLink("Sleep Time",
-                                            href="/sleep-time", id="sleep-time")),
+                    # dbc.NavItem(dbc.NavLink("Sleep Time",
+                    #                         href="/sleep-time", id="sleep-time")),
+                    # dbc.NavItem(dbc.NavLink(
+                    #     "Daily Routine", href="/routine", id="routine")),
                     dbc.NavItem(dbc.NavLink(
-                        "Daily Routine", href="/routine", id="routine")),
+                        "Work Time", href="/worktime_graphs", id="work_time")),
                     dbc.NavItem(dbc.NavLink(
                         "Mess", href="/mess", id="mess")),
                     dbc.NavItem(dbc.NavLink(
@@ -84,7 +86,7 @@ def get_sidebar():
                     dbc.NavItem(dbc.NavLink(
                         "Sleep Pattern", href="/sleep_pattern", id="sleep_pattern")),
                     dbc.NavItem(dbc.NavLink(
-                        "Workout", href="/workout_events", id="workout_events")),
+                        "Workout", href="/workout_graphs", id="workout_events")),
                 ],
                 vertical=True,
                 pills=True,
