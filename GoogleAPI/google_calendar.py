@@ -38,7 +38,7 @@ class CalendarService:
         end_dt = event['end'].get('dateTime', event['end'].get('date'))
         start = datetime.strptime(start_dt, '%Y-%m-%dT%H:%M:%S+05:30')
         end = datetime.strptime(end_dt, '%Y-%m-%dT%H:%M:%S+05:30')
-        summary = event['summary']
+        summary = event['summary'] if "summary" in event else ""
         description = event['description'] if 'description' in event else ""
         return CalendarEvent(start, end, summary, description, event)
 
@@ -56,6 +56,7 @@ class CalendarService:
                                                    timeMin=time_min,
                                                    timeMax=time_max,
                                                    singleEvents=True,
+                                                   maxResults=2500,
                                                    orderBy='startTime').execute()
         events = events_result.get('items', [])
 

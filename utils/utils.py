@@ -14,5 +14,4 @@ def set_title(title):
         'text': title,
         'y': 0.9,
         'x': 0.5,
-        'xanchor': 'center',
-        'anchor': 'top'}
+        'xanchor': 'center'}

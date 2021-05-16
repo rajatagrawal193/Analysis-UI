@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from datetime import timedelta, date
 from models.graph import Graph
 from commons.calendar_service import calendar_service
-from utils.graph_utils import generate_monthly_frequency_graph, generate_weekly_monthly_trends
+from utils.graph_utils import generate_monthly_frequency_graph, generate_trend
 
 
 class WorkoutGraphs:
@@ -36,7 +36,7 @@ class WorkoutGraphs:
             graph.marker_size.append(event.duration_in_minutes / 2.5)
 
         fig = go.Figure()
-        # fig = graph.update_fig_layout(fig)
+        fig = graph.update_fig_layout(fig)
 
         fig.add_trace(go.Scatter(
             x=graph.x,
@@ -51,8 +51,8 @@ class WorkoutGraphs:
 
     def get_weekly_workout_graph(self):
         # return go.Figure()
-        return generate_weekly_monthly_trends("Workout", self.workout_events, self.start_date, self.end_date, "Weekly", duration=False)
+        return generate_trend("Workout", self.workout_events, self.start_date, self.end_date, "Weekly", duration=False)
 
     def get_monthly_workout_graph(self):
         # return go.Figure()
-        return generate_weekly_monthly_trends("Workout", self.workout_events, self.start_date, self.end_date, "Monthly", duration=False)
+        return generate_trend("Workout", self.workout_events, self.start_date, self.end_date, "Monthly", duration=False)

@@ -60,9 +60,9 @@ class SleepPattern:
 
         fig = go.Figure()
 
-        # fig.update_layout(legend_title_text='Sleep Pattern',
-        #                   yaxis_title='Time', xaxis_title='Date',
-        #                   title=utils.set_title("Sleep Pattern"))
+        fig.update_layout(legend_title_text='Sleep Pattern',
+                          yaxis_title='Time', xaxis_title='Date',
+                          title=utils.set_title("Sleep Pattern"))
         # fig.update_yaxes(rangemode="tozero")
         fig.update_yaxes(
             ticktext=["10 PM", "12 AM", "2AM", "5AM", "9AM"],
@@ -72,19 +72,19 @@ class SleepPattern:
             x=bed_time_graph.x,
             y=bed_time_graph.y,
             mode="lines+markers+text",
-            text=bed_time_graph.text,
+            # text=bed_time_graph.text,
             name=getup_time_graph.title,
             # marker=dict(color=gra),
-            textposition="top center"
+            # textposition="top center"
         ))
         fig.add_trace(go.Scatter(
             x=getup_time_graph.x,
             y=getup_time_graph.y,
             mode="lines+markers+text",
-            text=getup_time_graph.text,
+            # text=getup_time_graph.text,
             name=getup_time_graph.title,
             marker=dict(color='Red'),
-            textposition="top center"
+            # textposition="top center"
         ))
 
         return fig
