@@ -3,6 +3,22 @@ from models.graph import Graph
 import plotly.graph_objects as go
 from datetime import date
 
+
+def generate_monthly_frequency_graph(title, calendar_events, start_date, end_date):
+    delta = end_date - start_date
+    total_days = delta.days
+    avg = len(calendar_events) / total_days * 30.0
+    graph = Graph(f"Monthly {title} Events | Avg: {avg}", "Frequency", "Month")
+    events_by_month = get_events_by_month(calendar_events)
+    for month, events in events_by_month.items():
+        graph.x.append(month)
+        graph.y.append(len(events))
+
+    fig = go.Figure(data=[go.Bar(x=graph.x, y=graph.y, name=graph.title)], layout=dict(title=dict(text=graph.title)))
+    fig = graph.update_fig_layout(fig)
+    return fig
+
+
 def get_events_by_week(events: [CalendarEvent]) -> dict[str, [CalendarEvent]]:
     weekly_segregated_events = {}
     for event in events:
@@ -33,28 +49,26 @@ def get_events_by_month(events):
 
 MEASURE_DURATION = "DURATION"
 MEASURE_COUNT = "COUNT"
+MEASURE_AVG = "AVERAGE"
 INTERVAL_DAILY = "Daily"
 INTERVAL_WEEKLY = "Weekly"
 INTERVAL_MONTHLY = "Monthly"
 
-#
-# def generate_daily_frequency_graph(title, calendar_events, start_date, end_date, measure, night_shift=None) -> go.Figure():
-#
-#     graph = Graph(f"Daily {title} Events | Avg: {avg} ", {measure}, "Day")
-#     for event in calendar_events:
 
-
-def generate_weekly_monthly_trends(title, calendar_events, start_date, end_date, interval, duration=False) -> go.Figure():
+def generate_trend(title, calendar_events, start_date, end_date, interval, duration=False) -> go.Figure():
+    segregated_events = None
+    days = 1
+    if interval == INTERVAL_WEEKLY:
+        segregated_events = get_events_by_week(calendar_events)
+        days = 7
+    if interval == INTERVAL_MONTHLY:
+        segregated_events = get_events_by_month(calendar_events)
+        days = 30
     delta = end_date - start_date
     total_days = delta.days
     avg = len(calendar_events) / total_days * 7.0
     measure = MEASURE_DURATION if duration else MEASURE_COUNT
-    graph = Graph(f"{interval} {title} Events | Avg: {avg} ", {measure}, interval)
-    segregated_events = None
-    if interval == INTERVAL_WEEKLY:
-        segregated_events = get_events_by_week(calendar_events)
-    if interval == INTERVAL_MONTHLY:
-        segregated_events = get_events_by_month(calendar_events)
+    graph = Graph(f"{interval} {title} Events | Avg: {avg} ", measure, interval)
     if segregated_events:
         for interval_name, events in segregated_events.items():
             graph.x.append(interval_name)
@@ -63,29 +77,22 @@ def generate_weekly_monthly_trends(title, calendar_events, start_date, end_date,
                 for event in events:
                     total_duration += event.duration_in_hours
                 graph.y.append(total_duration)
+                graph.avg.append(total_duration)
             else:
                 graph.y.append(len(events))
+                graph.avg.append(len(events))
+        average = sum(graph.avg)/len(graph.avg)
+        graph.title = f"{interval} {title} Events | Avg: {average} "
     else:
         for event in calendar_events:
             graph.x.append(event.date)
             graph.y.append(event.duration_in_hours)
-
+            average = sum(graph.y)/len(graph.y)
+            graph.title= f"{interval} {title} Events | Avg: {average} "
     fig = go.Figure(data=[go.Bar(x=graph.x, y=graph.y, name=graph.title)], layout=dict(title=dict(text=graph.title)))
-    # fig = graph.update_fig_layout(fig)
+    fig = graph.update_fig_layout(fig)
     return fig
 
 
-def generate_monthly_frequency_graph(title, calendar_events, start_date, end_date):
-    delta = end_date - start_date
-    total_days = delta.days
-    avg = len(calendar_events) / total_days * 30.0
-    graph = Graph(f"Monthly {title} Events | Avg: {avg}", "Frequency", "Month")
-    events_by_month = get_events_by_month(calendar_events)
-    for month, events in events_by_month.items():
-        graph.x.append(month)
-        graph.y.append(len(events))
 
-    fig = go.Figure(data=[go.Bar(x=graph.x, y=graph.y, name=graph.title)], layout=dict(title=dict(text=graph.title)))
-    # fig = graph.update_fig_layout(fig)
-    return fig
 

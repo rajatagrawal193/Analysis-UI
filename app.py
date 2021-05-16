@@ -32,7 +32,8 @@ server = app.server
 
 app.layout = get_layout()
 
-default_start_date = (date.today() - timedelta(days=31)).isoformat()
+# default_start_date = (date.today() - timedelta(days=31)).isoformat()
+default_start_date = date.fromisoformat("2020-05-01").isoformat()
 default_end_date = (date.today() + timedelta(days=1)).isoformat()
 workout_graphs = WorkoutGraphs(default_start_date, default_end_date)
 sleep_pattern = SleepPattern(default_start_date, default_end_date )
@@ -91,6 +92,7 @@ def update_workout_events_graphs(start_date, end_date):
 
 @app.callback(
     [Output(WorktimeGraphs.WORKTIME_EVENTS_GRAPH_ID, 'figure'),
+     Output(WorktimeGraphs.DAILY_WORKTIME_EVENTS_GRAPH_ID, 'figure'),
      Output(WorktimeGraphs.WEEKLY_WORKTIME_EVENTS_GRAPH_ID, 'figure'),
      Output(WorktimeGraphs.MONTHLY_WORKTIME_EVENTS_GRAPH_ID, 'figure'),],
     [Input(component_id='date-picker', component_property='start_date'),
@@ -99,7 +101,7 @@ def update_workout_events_graphs(start_date, end_date):
 def update_workout_events_graphs(start_date, end_date):
     wg = WorktimeGraphs(start_date, end_date)
 
-    return wg.get_worktime_events_graph(), wg.get_weekly_worktime_graph(), wg.get_monthly_worktime_graph()
+    return wg.get_worktime_events_graph(), wg.get_daily_worktime_graph(), wg.get_weekly_worktime_graph(), wg.get_monthly_worktime_graph()
 
 
 @app.callback(

@@ -15,7 +15,7 @@ def get_navbar():
                 start_date_placeholder_text="Start Period",
                 end_date_placeholder_text="End Period",
                 calendar_orientation='vertical',
-                start_date=datetime.date.today() - datetime.timedelta(days=31),
+                start_date=datetime.date(2020, 4, 1),
                 end_date=datetime.date.today(),
                 style={'padding': '1px'}
             )
