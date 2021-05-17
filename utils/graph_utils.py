@@ -55,40 +55,43 @@ INTERVAL_WEEKLY = "Weekly"
 INTERVAL_MONTHLY = "Monthly"
 
 
+def get_events_by_date(calendar_events):
+    events_by_date = {}
+    for event in calendar_events:
+        event_date = event.date
+        if event_date not in events_by_date:
+            events_by_date[event_date] = [event]
+        else:
+            events_by_date[event_date].append(event)
+    return events_by_date
+
+
 def generate_trend(title, calendar_events, start_date, end_date, interval, duration=False) -> go.Figure():
     segregated_events = None
-    days = 1
     if interval == INTERVAL_WEEKLY:
         segregated_events = get_events_by_week(calendar_events)
-        days = 7
     if interval == INTERVAL_MONTHLY:
         segregated_events = get_events_by_month(calendar_events)
-        days = 30
-    delta = end_date - start_date
-    total_days = delta.days
-    avg = len(calendar_events) / total_days * 7.0
+    if interval == INTERVAL_DAILY:
+        segregated_events = get_events_by_date(calendar_events)
+    if segregated_events is None:
+        return go.Figure()
+
     measure = MEASURE_DURATION if duration else MEASURE_COUNT
-    graph = Graph(f"{interval} {title} Events | Avg: {avg} ", measure, interval)
-    if segregated_events:
-        for interval_name, events in segregated_events.items():
-            graph.x.append(interval_name)
-            if duration:
-                total_duration = 0
-                for event in events:
-                    total_duration += event.duration_in_hours
-                graph.y.append(total_duration)
-                graph.avg.append(total_duration)
-            else:
-                graph.y.append(len(events))
-                graph.avg.append(len(events))
-        average = sum(graph.avg)/len(graph.avg)
-        graph.title = f"{interval} {title} Events | Avg: {average} "
-    else:
-        for event in calendar_events:
-            graph.x.append(event.date)
-            graph.y.append(event.duration_in_hours)
-            average = sum(graph.y)/len(graph.y)
-            graph.title= f"{interval} {title} Events | Avg: {average} "
+    graph = Graph(f"{interval} {title} Events", measure, interval)
+
+    for interval_name, events in segregated_events.items():
+        graph.x.append(interval_name)
+        if duration:
+            total_duration = 0
+            for event in events:
+                total_duration += event.duration_in_hours
+            graph.y.append(total_duration)
+        else:
+            graph.y.append(len(events))
+    average = sum(graph.y)/len(graph.y)
+    graph.title += f" | Avg: {average}"
+
     fig = go.Figure(data=[go.Bar(x=graph.x, y=graph.y, name=graph.title)], layout=dict(title=dict(text=graph.title)))
     fig = graph.update_fig_layout(fig)
     return fig
